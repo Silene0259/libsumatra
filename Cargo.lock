@@ -610,9 +610,9 @@ dependencies = [
 
 [[package]]
 name = "libsumatracrypt-rs"
-version = "0.1.2"
+version = "0.1.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d47e7406d97ba7db8d0829fd398efb6cfdb5a360319c3800abd596028c7c0ea4"
+checksum = "bfd1087cda2be7fe02cec5a745cb012205f925f389b54c0a9b5a3698c3e18036"
 dependencies = [
  "base32",
  "blake2-rfc",

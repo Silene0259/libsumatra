@@ -1,7 +1,7 @@
 use serde::{Serialize,Deserialize};
 
 /// 40-byte string using BLAKE2B(40) that can be keyed with secret value
-#[derive(Serialize,Deserialize)]
+#[derive(Clone,Serialize,Deserialize)]
 pub struct PivFingerprint(String);
 
 impl PivFingerprint {
@@ -9,6 +9,6 @@ impl PivFingerprint {
         return Self(fingerprint.as_ref().to_string())
     }
     pub fn to_string(&self) -> String {
-        return self.0
+        return self.0.to_string()
     }
 }

@@ -1,6 +1,6 @@
 use serde::{Serialize,Deserialize};
 
-#[derive(Serialize,Deserialize)]
+#[derive(Clone, Serialize,Deserialize)]
 pub enum GeneralPivotRules {
     General,
 }

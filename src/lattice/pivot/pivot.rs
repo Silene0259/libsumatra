@@ -1,5 +1,5 @@
 use fingerprint::PivFingerprint;
-use libsumatracrypt_rs::digest::SumatraBlake2b;
+use libsumatracrypt_rs::{digest::SumatraBlake2b, signatures::ed25519::{ED25519PublicKey, SumatraED25519}};
 use hex;
 
 use serde::{Serialize,Deserialize};
@@ -43,27 +43,33 @@ impl PivotInit {
         let csprng = random::RandomNumbers::new(hex::encode_upper(libsumatracrypt_rs::csprng::SumatraCSPRNG::get_64_bytes_from_os()));
 
         let pivtohash = PivotToHash {
-            version: version,
-            pk: pk,
-            csprng: csprng,
+            version: version.clone(),
+            pk: pk.clone(),
+            csprng: csprng.clone(),
             pivottype: pivottype,
-            rules: rules,
+            rules: rules.clone(),
         };
 
         let serialized = serde_json::to_string(&pivtohash).expect("Failed To Convert");
 
         let key = String::from("");
         let fingerprinthash = SumatraBlake2b::new(&serialized, &key, 40);
-        let pivfingerprint = PivFingerprint::new(fingerprinthash);
+        let pivfingerprint = PivFingerprint::new(fingerprinthash.clone());
 
-        let signed = sk.sign(fingerprinthash);
+        println!("Serialized: {}",serialized);
+
+        let signed = sk.sign(fingerprinthash.clone());
+
+        println!("FingerprintHash: {}",fingerprinthash.clone());
+
+        println!("Signature: {}", signed.to_string());
 
         return Self {
             version: version,
-            pk: pk,
+            pk: pk.clone(),
             csprng: csprng,
             pivottype: pivottype,
-            rules: rules,
+            rules: rules.clone(),
             fingerprinthash: pivfingerprint,
             signature: signed,
         }
@@ -84,3 +90,14 @@ impl PivotInit {
 }
 
 pub struct PivotInternals;
+
+#[test]
+fn test_pivot() {
+    let sk = SumatraED25519::new();
+    let pk: ED25519PublicKey = sk.to_public_key();
+
+    let pk_as_type: keys::PivotPublicKey = keys::PivotPublicKey::from_public_key(pk);
+    let sk_as_type: keys::PivotSecretKey = keys::PivotSecretKey::from_secret_key(sk);
+
+    let pivot = PivotInit::new(pk_as_type,sk_as_type,pivtype::PivType::Default(0u16),pivotrules::GeneralPivotRules::General);
+}

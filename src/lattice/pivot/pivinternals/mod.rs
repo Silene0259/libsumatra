@@ -6,6 +6,5 @@ use crate::lattice::pivot::pivtypes::pivgenesis::GenesisPivotHash;
 pub struct GenesisPivotConfig {
     pivot: PivotInit,
 
-    hashpksigfingerprint: 
     nonce: Nonce,
 }
