@@ -1,17 +1,21 @@
+use fingerprint::PivFingerprint;
 use libsumatracrypt_rs::digest::SumatraBlake2b;
+use hex;
+
+use serde::{Serialize,Deserialize};
 
 use crate::lattice::pivot::pivtypes::*;
 
 // Need Digital Signature
 
+#[derive(Serialize,Deserialize)]
 pub struct PivotInit {
     version: version::PivotVersion,
     
-    pk: publickey::PivotPublicKey,
+    pk: keys::PivotPublicKey,
 
     // RNG
     csprng: random::RandomNumbers,
-    qrng: random::QuantumRandomNumbers,
 
     pivottype: pivtype::PivType,
     rules: pivotrules::GeneralPivotRules,
@@ -20,12 +24,49 @@ pub struct PivotInit {
     fingerprinthash: fingerprint::PivFingerprint,
 
     // Sign Fingerprint
-    signature: publickey::PivotSignature,
+    signature: keys::PivotSignature,
+}
+
+#[derive(Serialize,Deserialize)]
+pub struct PivotToHash {
+    version: version::PivotVersion,
+    pk: keys::PivotPublicKey,
+    csprng: random::RandomNumbers,
+    pivottype: pivtype::PivType,
+    rules: pivotrules::GeneralPivotRules,
+
 }
 
 impl PivotInit {
-    pub fn new() {
-        
+    pub fn new(pk: keys::PivotPublicKey, sk: keys::PivotSecretKey, pivottype: pivtype::PivType, rules: pivotrules::GeneralPivotRules) -> Self {
+        let version = version::PivotVersion::V0000;
+        let csprng = random::RandomNumbers::new(hex::encode_upper(libsumatracrypt_rs::csprng::SumatraCSPRNG::get_64_bytes_from_os()));
+
+        let pivtohash = PivotToHash {
+            version: version,
+            pk: pk,
+            csprng: csprng,
+            pivottype: pivottype,
+            rules: rules,
+        };
+
+        let serialized = serde_json::to_string(&pivtohash).expect("Failed To Convert");
+
+        let key = String::from("");
+        let fingerprinthash = SumatraBlake2b::new(&serialized, &key, 40);
+        let pivfingerprint = PivFingerprint::new(fingerprinthash);
+
+        let signed = sk.sign(fingerprinthash);
+
+        return Self {
+            version: version,
+            pk: pk,
+            csprng: csprng,
+            pivottype: pivottype,
+            rules: rules,
+            fingerprinthash: pivfingerprint,
+            signature: signed,
+        }
     }
     pub fn get_pivgenesishash<T: AsRef<str>>(&self, key: T) -> String {
         let mut result = String::new();

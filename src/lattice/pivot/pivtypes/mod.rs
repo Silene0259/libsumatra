@@ -13,8 +13,10 @@ pub mod pivtype;
 /// Versioning
 pub mod version;
 
-pub mod publickey;
+pub mod keys;
 
 pub mod nonce;
 
 pub mod pivgenesis;
+
+pub use serde::{Serialize,Deserialize};
