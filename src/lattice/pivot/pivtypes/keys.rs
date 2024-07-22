@@ -15,6 +15,9 @@ impl PivotPublicKey {
     pub fn from_public_key(pk: ED25519PublicKey) -> Self {
         return Self(pk)
     }
+    pub fn verify_sig<T: AsRef<[u8]>>(&self,bytes: T, signature: PivotSignature) -> bool {
+        self.0.verify(bytes, signature.to_signature_in_ed25519())
+    }
     pub fn to_string(&self) -> String {
         return self.0.to_string()
     }
@@ -23,6 +26,9 @@ impl PivotPublicKey {
 impl PivotSignature {
     pub fn to_string(&self) -> String {
         return self.0.to_string()
+    }
+    pub fn to_signature_in_ed25519(&self) -> ED25519Signature {
+        return self.0.clone()
     }
 }
 

@@ -1,2 +1,2 @@
 pub mod pivot;
-pub mod lattice;
+pub mod sumatralattice;
