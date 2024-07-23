@@ -6,5 +6,6 @@
 /// - PivotRules
 pub mod pivtypes;
 pub mod pivinternals;
+pub mod pivotconfig;
 
 pub mod pivot;
