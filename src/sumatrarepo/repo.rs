@@ -8,37 +8,18 @@ use hex;
 
 use std::path::Path;
 
-pub struct SumatraRepo {
-    repo: Repository,
-    
-    csprng: String,
-    pk: String,
-    signature: String,
-}
+pub struct SumatraRepo(Repository);
 
-pub struct SumatraRepoSignature(Signature);
+pub struct SumatraRepoSignature(String);
 
 impl SumatraRepo {
-    pub fn commit(&self) -> Self {
-
-    }
     pub fn open<T: AsRef<Path>>(path: T) -> Self {
         Self(Repository::open(path.as_ref()).expect("Failed To Open Path"))
     }
     pub fn init<T: AsRef<Path>>(path: T, pk: ED25519PublicKey, sk: ED25519SecretKey) -> Self {
         let csprng = hex::encode_upper(SumatraCSPRNG::new_32());
         let publickey = pk.to_string();
-
-        git2::Cred::credtype(&self)
         
         Self(Repository::init(path.as_ref()).expect("Failed To Unwrap Repository"))
-    }
-}
-
-impl SumatraRepoSignature {
-    pub fn new<T: AsRef<str>>(author: T, email: T) {
-        
-        
-        Signature::new(author.as_ref(), email.as_ref(), time)
     }
 }
