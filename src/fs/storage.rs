@@ -60,7 +60,9 @@ impl SumatraHomeDirectory {
 }
 
 impl SumatraHomeDirectoryKeyspace {
-
+    pub fn return_keyspace(&self) -> PathBuf {
+        return self.0.clone()
+    }
 }
 
 #[test]
