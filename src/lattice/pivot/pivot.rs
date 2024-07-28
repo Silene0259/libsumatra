@@ -6,7 +6,7 @@ use serde::{Serialize,Deserialize};
 
 use crate::lattice::pivot::pivtypes::*;
 
-use crate::lattice::sumatralattice::lattice::GenesisBlockLattice;
+//use crate::lattice::sumatralattice::lattice::GenesisBlockLattice;
 
 pub const version: version::PivotVersion = version::PivotVersion::V0000;
 
@@ -148,6 +148,4 @@ fn test_pivot() {
     println!("{}",pivot.serialize_to_json());
 
     pivot.verify();
-
-    println!("Final Print (GENESIS): {}",GenesisBlockLattice::new(pivot).to_json());
 }

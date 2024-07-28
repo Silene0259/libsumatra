@@ -9,3 +9,4 @@ pub mod pivinternals;
 pub mod pivotconfig;
 
 pub mod pivot;
+pub mod genesis;
