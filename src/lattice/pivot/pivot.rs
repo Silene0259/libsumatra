@@ -92,7 +92,7 @@ impl PivotInit {
         return SumatraBlake2b::new(result, key.as_ref().to_string(), 40usize);
     }
     pub fn serialize_to_json(&self) -> String {
-        serde_json::to_string_pretty(&self).expect("Failed To Serialize To JSON")
+        serde_json::to_string(&self).expect("Failed To Serialize To JSON")
     }
     pub fn ffph(&self) -> fingerprint::PivFingerprint {
         return self.fingerprinthash.clone()
